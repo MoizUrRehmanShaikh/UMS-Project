@@ -1,0 +1,53 @@
+/* dashboard.css (Used by admin_dashboard.php, teacher_dashboard.php, student_dashboard.php) */
+
+.management-area, .system-overview {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: #fcfcfc;
+}
+
+/* Data Tables Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #004d40;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Dashboard Links/Buttons */
+.management-tools ul {
+    list-style: none;
+    padding: 0;
+}
+
+.management-tools li a {
+    display: inline-block;
+    background-color: #00796b;
+    color: white;
+    padding: 10px 15px;
+    margin: 5px 10px 5px 0;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.management-tools li a:hover {
+    background-color: #004d40;
+}
