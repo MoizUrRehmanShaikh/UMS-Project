@@ -7,26 +7,30 @@ $error = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $role = $_POST['role']; // Role selected in the form
+    $role = $_POST['role']; // Role selected in the form: 'student' or 'teacher'
+    
+    $table_name = ($role == 'teacher') ? 'teachers' : 'students';
+    $id_field = ($role == 'teacher') ? 'teacher_id' : 'student_id';
 
-    // Check if user exists and role matches
-    $stmt = $conn->prepare("SELECT user_id, password_hash, role, username FROM users WHERE username = ? AND role = ?");
-    $stmt->bind_param("ss", $username, $role);
+    // 1. Check for Student or Teacher credentials
+    // Note: We use the specific table name determined by $role
+    $stmt = $conn->prepare("SELECT {$id_field}, password_hash, username FROM {$table_name} WHERE username = ?");
+    $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
         
-        // Verify password hash
+        // 2. Verify password hash
         if (password_verify($password, $user['password_hash'])) {
             // Login successful: Set session variables
-            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['user_id'] = $user[$id_field]; // Use teacher_id or student_id
             $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role'];
+            $_SESSION['role'] = $role; // 'teacher' or 'student'
 
             // Redirect to appropriate dashboard
-            if ($user['role'] == 'teacher') {
+            if ($role == 'teacher') {
                 header("Location: public/teacher_dashboard.php");
             } else { // student
                 header("Location: public/student_dashboard.php");

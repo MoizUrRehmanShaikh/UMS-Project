@@ -5,14 +5,14 @@ include 'config/db.php';
 $message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect common fields
+    // Collect common login fields
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password_raw = $_POST['password'];
     $role = $_POST['role'];
     $name = $_POST['name'];
     
-    // Collect specific student fields ONLY if role is student
+    // Collect specific student fields
     $reg_num = ($role == 'student' && isset($_POST['reg_num'])) ? $_POST['reg_num'] : null;
     $department = ($role == 'student' && isset($_POST['dept'])) ? $_POST['dept'] : null;
     $year = ($role == 'student' && isset($_POST['year'])) ? $_POST['year'] : null;
@@ -21,29 +21,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $conn->begin_transaction();
     try {
-        // 1. Insert into users table
-        $stmt = $conn->prepare("INSERT INTO users (username, password_hash, email, role) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $username, $password_hash, $email, $role);
-        $stmt->execute();
-        $user_id = $conn->insert_id;
-        $stmt->close();
-
-        // 2. Insert into specific role table
+        // --- LOGIC IS NOW SIMPLIFIED: INSERT DIRECTLY INTO ROLE TABLE ---
+        
         if ($role == 'teacher') {
-            $stmt = $conn->prepare("INSERT INTO teachers (teacher_id, name) VALUES (?, ?)");
-            $stmt->bind_param("is", $user_id, $name);
+            // Insert directly into the teachers table
+            // Fields: username, password_hash, email, name
+            $stmt = $conn->prepare("INSERT INTO teachers (username, password_hash, email, name) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $username, $password_hash, $email, $name);
             $stmt->execute();
             $stmt->close();
             $message = "Teacher account created successfully! Please log in.";
-        } elseif ($role == 'student') {
-            // UPDATED SQL: Includes registration_number, department, and year
-            $stmt = $conn->prepare("INSERT INTO students (student_id, name, registration_number, department, year) VALUES (?, ?, ?, ?, ?)");
             
-            // UPDATED bind_param: i(ID), s(Name), s(Reg Num), s(Dept), s(Year)
-            $stmt->bind_param("issss", $user_id, $name, $reg_num, $department, $year);
+        } elseif ($role == 'student') {
+            // Insert directly into the students table
+            // Fields: username, password_hash, email, name, registration_number, department, year
+            $stmt = $conn->prepare("INSERT INTO students (username, password_hash, email, name, registration_number, department, year) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?)");
+            
+            // sssssss for 7 string parameters
+            $stmt->bind_param("sssssss", $username, $password_hash, $email, $name, $reg_num, $department, $year);
             $stmt->execute();
             $stmt->close();
             $message = "Student account created successfully! Registration No: $reg_num. Please log in.";
+            
         } else {
             throw new Exception("Invalid role selected.");
         }
@@ -52,11 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } catch (Exception $e) {
         $conn->rollback();
         
-        // Check for duplicate entry error (username, email, or registration_number)
         if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
             $message = "Error: Username, Email, or Registration Number already exists.";
         } else {
-            // Display error for debugging only, usually $message should be generic
             $message = "Registration failed: " . $e->getMessage();
         }
     }
@@ -67,8 +65,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Register - Tando Jam University</title>
-   <link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <style>
+        .student-fields { display: none; } /* Initially hide student-specific fields */
+    </style>
 </head>
 <body>
     <div class="content">
@@ -106,6 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="year">Academic Year (e.g., 2nd Year):</label><br>
                 <input type="text" id="year" name="year"><br><br>
             </div>
+            
             <input type="submit" value="Register">
         </form>
         <p>Already have an account? <a href="login.php">Login here</a></p>

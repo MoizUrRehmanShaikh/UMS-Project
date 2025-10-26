@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../config/db.php';
+include '../config/db.php'; // Note the '../' to go up one level
 
 $error = '';
 
@@ -8,8 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Check specifically for ADMIN role
-    $stmt = $conn->prepare("SELECT user_id, password_hash, username FROM users WHERE username = ? AND role = 'admin'");
+    // 1. Check specifically for credentials in the 'admins' table
+    $stmt = $conn->prepare("SELECT admin_id, password_hash, username FROM admins WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -17,18 +17,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
         
+        // 2. Verify password hash
         if (password_verify($password, $user['password_hash'])) {
             // Admin Login successful
-            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['user_id'] = $user['admin_id'];
             $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = 'admin';
-            header("Location: admin_dashboard.php"); // Redirect to admin panel
+            $_SESSION['role'] = 'admin'; // Fixed role
+            header("Location: admin_dashboard.php"); 
             exit();
         } else {
             $error = "Invalid password.";
         }
     } else {
-        $error = "Invalid username or role.";
+        $error = "Invalid username.";
     }
 
     $stmt->close();

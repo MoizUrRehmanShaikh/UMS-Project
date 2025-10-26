@@ -1,38 +1,73 @@
 <?php
 session_start();
 include '../config/db.php';
-// Security check: must be logged in as a student
+
+// Security check: Must be logged in as a student
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'student') {
     header("Location: ../login.php");
     exit();
 }
 
-// Fetch student data and enrolled courses...
+$student_id = $_SESSION['user_id'];
+$student_name = "Student"; // Default name
+
+// Fetch student's full name and registration number from the students table
+$stmt = $conn->prepare("SELECT name, registration_number, department, year FROM students WHERE student_id = ?");
+$stmt->bind_param("i", $student_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($row = $result->fetch_assoc()) {
+    $student_name = $row['name'];
+    $reg_num = $row['registration_number'];
+    $department = $row['department'];
+    $year = $row['year'];
+}
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Student Portal</title>
     <link rel="stylesheet" href="../css/base.css">
-<link rel="stylesheet" href="../css/dashboard.css">
-    </head>
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
 <body>
-    <h1>Welcome, Student <?php echo $_SESSION['username']; ?>!</h1>
-    
-    <h2>Your Courses and Attendance</h2>
-    <?php
-    // Example: Fetch courses and attendance for the logged-in student
-    $stmt = $conn->prepare("SELECT c.course_name, s.name FROM students s JOIN enrollment e ON s.student_id = e.student_id JOIN courses c ON e.course_id = c.course_id WHERE s.student_id = ?");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    echo "<ul>";
-    while ($row = $result->fetch_assoc()) {
-        echo "<li>{$row['course_name']} - Check Exam Results / Attendance % (Logic to be implemented)</li>";
-    }
-    echo "</ul>";
-    $stmt->close();
-    ?>
-    <p>... Additional student privileges (Exam results, etc.) will go here ...</p>
+    <div class="content">
+        <h1>Welcome, <?php echo htmlspecialchars($student_name); ?>!</h1>
+        
+        <div class="system-overview">
+            <h2>Your Details</h2>
+            <p><strong>Username:</strong> <?php echo htmlspecialchars($_SESSION['username']); ?></p>
+            <p><strong>Registration No:</strong> <?php echo htmlspecialchars($reg_num ?? 'N/A'); ?></p>
+            <p><strong>Department:</strong> <?php echo htmlspecialchars($department ?? 'N/A'); ?></p>
+            <p><strong>Academic Year:</strong> <?php echo htmlspecialchars($year ?? 'N/A'); ?></p>
+        </div>
+
+        <h2>Your Courses and Attendance</h2>
+        <?php
+        // Example: Fetch enrolled courses (Logic remains the same as it references the student_id correctly)
+        $stmt = $conn->prepare("
+            SELECT c.course_name, c.course_code 
+            FROM enrollment e 
+            JOIN courses c ON e.course_id = c.course_id 
+            WHERE e.student_id = ?
+        ");
+        $stmt->bind_param("i", $student_id);
+        $stmt->execute();
+        $courses_result = $stmt->get_result();
+        
+        if ($courses_result->num_rows > 0) {
+            echo "<ul>";
+            while ($row = $courses_result->fetch_assoc()) {
+                echo "<li>{$row['course_name']} ({$row['course_code']}) - Attendance/Results (Logic to be implemented)</li>";
+            }
+            echo "</ul>";
+        } else {
+            echo "<p>You are not currently enrolled in any courses.</p>";
+        }
+        $stmt->close();
+        ?>
+    </div>
 </body>
 </html>

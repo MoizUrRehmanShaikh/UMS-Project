@@ -1,38 +1,64 @@
--- 1. Create the database
-CREATE DATABASE tandojam_ums;
+-- ORGANISED AND SIMPLIFIED UNIVERSITY MANAGEMENT SYSTEM DDL
+
+-- 1. DATABASE SETUP
+-- -------------------------------------------------------------------
+CREATE DATABASE IF NOT EXISTS tandojam_ums;
 USE tandojam_ums;
 
--- 2. Users Table (Stores login credentials and role)
-CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
+-- Optional: Drop tables if they exist to start fresh
+DROP TABLE IF EXISTS attendance;
+DROP TABLE IF EXISTS enrollment;
+DROP TABLE IF EXISTS course_assignments;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS teachers;
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS admins;
+
+
+-- 2. USER TABLES (Simplified for Project Requirement)
+-- -------------------------------------------------------------------
+
+-- Admin Table (For single, fixed admin access)
+CREATE TABLE admins (
+    admin_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(100) NOT NULL
+);
+
+-- Teachers Table (Self-contained registration/login data)
+CREATE TABLE teachers (
+    teacher_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    role ENUM('admin', 'teacher', 'student') NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE
+    name VARCHAR(100) NOT NULL -- Full Name
 );
 
--- 3. Teachers and Students Tables (For specific profile data)
-CREATE TABLE teachers (
-    teacher_id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    FOREIGN KEY (teacher_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
+-- Students Table (Self-contained registration/login data + new fields)
 CREATE TABLE students (
-    student_id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    roll_number VARCHAR(20) UNIQUE NOT NULL,
-    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE
+    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,              -- Full Name
+    registration_number VARCHAR(20) UNIQUE NOT NULL,
+    department VARCHAR(50) NOT NULL,
+    year VARCHAR(20) NOT NULL
 );
 
--- 4. Courses and Assignment Tables (For scheduling and management)
+
+-- 3. ACADEMIC MANAGEMENT TABLES
+-- -------------------------------------------------------------------
+
+-- Courses Table
 CREATE TABLE courses (
     course_id INT AUTO_INCREMENT PRIMARY KEY,
     course_code VARCHAR(10) UNIQUE NOT NULL,
     course_name VARCHAR(100) NOT NULL
 );
 
+-- Course Assignments (Linking Teacher to Course)
 CREATE TABLE course_assignments (
     assignment_id INT AUTO_INCREMENT PRIMARY KEY,
     course_id INT,
@@ -41,7 +67,7 @@ CREATE TABLE course_assignments (
     FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id) ON DELETE CASCADE
 );
 
--- 5. Enrollment and Attendance Tables
+-- Enrollment (Linking Student to Course)
 CREATE TABLE enrollment (
     enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT,
@@ -51,6 +77,7 @@ CREATE TABLE enrollment (
     UNIQUE KEY (student_id, course_id)
 );
 
+-- Attendance Table
 CREATE TABLE attendance (
     attendance_id INT AUTO_INCREMENT PRIMARY KEY,
     enrollment_id INT,
@@ -60,47 +87,5 @@ CREATE TABLE attendance (
     UNIQUE KEY (enrollment_id, date)
 );
 
-SELECT * FROM teachers;
-SELECT * FROM students;
-
-
-USE tandojam_ums;
-
--- 1. Drop the existing 'students' table
--- NOTE: If any foreign keys depend on this table, you might need to drop those tables first (e.g., 'enrollment').
--- Based on the structure provided, we need to drop 'enrollment' first.
-
-DROP TABLE IF EXISTS attendance;
-DROP TABLE IF EXISTS enrollment;
-
--- Now drop students
-DROP TABLE IF EXISTS students;
-
--- 2. Create the new 'students' table with all required fields
-CREATE TABLE students (
-    student_id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL, -- Full Name
-    registration_number VARCHAR(20) UNIQUE NOT NULL, -- New Field
-    department VARCHAR(50) NOT NULL,                 -- New Field
-    year VARCHAR(20) NOT NULL,                       -- New Field
-    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
--- Recreate the dependent tables
-CREATE TABLE enrollment (
-    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT,
-    course_id INT,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
-    UNIQUE KEY (student_id, course_id)
-);
-
-CREATE TABLE attendance (
-    attendance_id INT AUTO_INCREMENT PRIMARY KEY,
-    enrollment_id INT,
-    date DATE NOT NULL,
-    status ENUM('Present', 'Absent', 'Late') NOT NULL,
-    FOREIGN KEY (enrollment_id) REFERENCES enrollment(enrollment_id) ON DELETE CASCADE,
-    UNIQUE KEY (enrollment_id, date)
-);
+select * from students;
+select * from teachers;
