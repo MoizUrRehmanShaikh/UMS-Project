@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>About Tando Jam University Management System</title>
+    <title>About Sindh Agriculture Univesity Tando Jam Management System</title>
     
     <link rel="stylesheet" href="css/base.css"> 
     <style>
@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="index.php">Tando Jam University</a>
+        <a href="index.php">Sindh Agriculture University Tando Jam</a>
         <a href="about.php">About</a>
         <?php if (isset($_SESSION['user_id'])): ?>
             <div class="right">

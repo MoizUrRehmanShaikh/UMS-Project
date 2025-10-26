@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tando Jam University Management System</title>
-   <link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/forms.css">
+    <title>Sindh Agriculture University Tando Jam  Management System</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/forms.css">
 </head>
 <body>
     <div class="navbar">
-        <a href="index.php">Tando Jam University</a>
+        <a href="index.php">Sindh Agriculture University Tando Jam</a>
         <a href="about.php">About</a>
         <?php if (isset($_SESSION['user_id'])): ?>
             <div class="right">
@@ -29,11 +29,37 @@
             </div>
         <?php endif; ?>
     </div>
-
-    <div class="content">
-        <h1>Welcome to Tando Jam University Management System</h1>
-        <p>Your centralized portal for academic management.</p>
-        <p>Use the navigation bar to register or log in.</p>
+    
+    <div class="hero">
+        <div class="content">
+            <h1>Welcome to Sindh Agriculture University Tando Jam Management System</h1>
+            <p class="tagline">Your centralized portal for academic management and growth.</p>
+            
+            <div class="cta-buttons">
+                <a href="login.php" class="btn btn-primary">Login to Portal</a>
+                <a href="register.php" class="btn btn-secondary">Register New Account</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="info-section">
+        <div class="content">
+            <h2>Seamless Management for Every Role</h2>
+            <div class="roles-grid">
+                <div>
+                    <h3>Admin</h3>
+                    <p>Total control over courses, users, and assignments.</p>
+                </div>
+                <div>
+                    <h3>Teacher</h3>
+                    <p>Manage assigned classes, record attendance, and submit grades.</p>
+                </div>
+                <div>
+                    <h3>Student</h3>
+                    <p>View personal attendance record and exam results instantly.</p>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

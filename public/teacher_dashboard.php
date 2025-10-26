@@ -23,11 +23,19 @@ $stmt->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Teacher Dashboard</title>
+    <title>SAU Teacher Dashboard</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
+    <div class="navbar">
+        <a href="../index.php">Home</a>
+        <a href="teacher_dashboard.php">Teacher Dashboard</a>
+        <div class="right">
+            <a href="../logout.php">Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+        </div>
+    </div>
+    
     <div class="content">
         <h1>Welcome, Teacher <?php echo htmlspecialchars($teacher_name); ?>!</h1>
 
