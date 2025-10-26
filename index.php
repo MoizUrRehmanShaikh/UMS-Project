@@ -4,8 +4,181 @@
 <head>
     <meta charset="UTF-8">
     <title>Sindh Agriculture University Tando Jam Management System</title>
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/forms.css">
+    <!-- <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/forms.css"> -->
+    <style>
+        /* base.css - UPDATED FOR ATTRACTIVE DESIGN */
+
+/* ------------------ GLOBAL STYLES ------------------ */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5; 
+    color: #333;
+}
+
+h1, h2, h3, h4 {
+    color: #004d40;
+    margin-top: 0;
+}
+
+a {
+    color: #00796b;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #004d40;
+}
+
+/* ------------------ NAVBAR STYLING ------------------ */
+.navbar {
+    background-color: #004d40; /* Dark Teal */
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 16px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #00796b; 
+}
+
+.navbar .right {
+    float: right;
+}
+
+/* ------------------ HERO SECTION (Index Page) ------------------ */
+.hero {
+    background: linear-gradient(rgba(0, 77, 64, 0.85), rgba(0, 77, 64, 0.85)), url('hero_background.jpg'); /* Placeholder image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero .content {
+    background: none; /* Override white background */
+    box-shadow: none;
+    padding: 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.hero .tagline {
+    font-size: 1.5em;
+    opacity: 0.9;
+    margin-bottom: 30px;
+}
+
+/* ------------------ CALL TO ACTION BUTTONS ------------------ */
+.cta-buttons {
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #00796b; /* Accent Teal */
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #004d40;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #004d40;
+    border: 2px solid #004d40;
+}
+
+.btn-secondary:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ------------------ GENERAL CONTENT & DASHBOARD STYLING ------------------ */
+.content {
+    padding: 40px 20px;
+    max-width: 1000px;
+    margin: 30px auto;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08); /* Smoother shadow */
+}
+
+h2 {
+    font-size: 1.8em;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    color: #004d40;
+}
+
+.info-section {
+    background-color: #f0f2f5;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.info-section h2 {
+    border: none;
+    color: #00796b;
+}
+
+.roles-grid {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+.roles-grid > div {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    min-width: 250px;
+}
+    </style>
 </head>
 <body>
     <div class="navbar">
@@ -62,16 +235,7 @@
         </div>
     </div>
     
-    <div class="gallery-section">
-        <div class="content">
-            <h2>Our Campus Vistas</h2>
-            <div class="image-grid">
-                <div class="image-item">
-                    <img src="pictures/Pic2.jpg" alt="University Campus View 2">
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 </body>
 </html>
