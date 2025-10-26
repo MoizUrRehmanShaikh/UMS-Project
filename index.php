@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sindh Agriculture University Tando Jam  Management System</title>
+    <title>Sindh Agriculture University Tando Jam Management System</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/forms.css">
 </head>
@@ -61,5 +61,17 @@
             </div>
         </div>
     </div>
+    
+    <div class="gallery-section">
+        <div class="content">
+            <h2>Our Campus Vistas</h2>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="pictures/Pic2.jpg" alt="University Campus View 2">
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

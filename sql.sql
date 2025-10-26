@@ -87,5 +87,19 @@ CREATE TABLE attendance (
     UNIQUE KEY (enrollment_id, date)
 );
 
+USE tandojam_ums;
+
+-- Table to store final grades/results for students in a course
+CREATE TABLE grades (
+    grade_id INT AUTO_INCREMENT PRIMARY KEY,
+    enrollment_id INT NOT NULL,
+    exam_type VARCHAR(50) NOT NULL, -- e.g., 'Midterm', 'Final', 'Assignment 1'
+    score DECIMAL(5, 2),            -- Optional: Store raw score
+    final_grade VARCHAR(5) NOT NULL, -- e.g., 'A+', 'B', 'F'
+    date_recorded DATE NOT NULL,
+    FOREIGN KEY (enrollment_id) REFERENCES enrollment(enrollment_id) ON DELETE CASCADE,
+    UNIQUE KEY (enrollment_id, exam_type) -- Ensures only one entry per student per exam type
+);
+
 select * from students;
 select * from teachers;
